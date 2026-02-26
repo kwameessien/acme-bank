@@ -1,5 +1,6 @@
 const Database = require("better-sqlite3");
 const express = require("express");
+const helmet = require("helmet");
 const session = require("express-session");
 const path = require("path");
 const fs = require("fs");
@@ -8,6 +9,7 @@ const db = new Database("./bank_sample.db");
 
 const app = express();
 const PORT = 3000;
+app.use(helmet());
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
