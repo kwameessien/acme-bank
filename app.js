@@ -199,8 +199,8 @@ app.post(
       if (comment) {
         try {
           db.prepare(
-            `INSERT INTO public_forum (username,message) VALUES ('${username}','${comment}')`
-          ).run();
+            "INSERT INTO public_forum (username,message) VALUES (?, ?)"
+          ).run(username, comment);
         } catch (err) {
           console.log(err);
         }
