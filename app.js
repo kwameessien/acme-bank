@@ -142,14 +142,16 @@ app.post("/download", function (request, response) {
   if (request.session.loggedin) {
     var file_name = request.body.file;
 
-    const root_directory = path.join(process.cwd(), "history_files", file_name);
+    const rootDir = "history_files\\";
+    const filePath = path.join(rootDir, file_name);
+    const fileName = path.normalize(filePath);
 
     response.statusCode = 200;
     response.setHeader("Content-Type", "text/html");
 
-    console.log(root_directory);
+    console.log(fileName);
     try {
-      content = fs.readFileSync(root_directory, "utf8");
+      content = fs.readFileSync(fileName, "utf8");
       response.end(content);
     } catch (err) {
       console.log(err);
