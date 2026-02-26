@@ -43,9 +43,9 @@ app.post("/auth", function (request, response) {
     try {
       const results = db
         .prepare(
-          `SELECT * FROM users WHERE username = '${request.body.username}' AND password = '${request.body.password}'`
+          "SELECT * FROM users WHERE username = ? AND password = ?"
         )
-        .get();
+        .get(username, password);
       console.log(results);
       if (results) {
         request.session.loggedin = true;
