@@ -71,8 +71,8 @@ app.post("/auth", function (request, response) {
 //Home Menu No Exploits Here.
 app.get("/home", function (request, response) {
   if (request.session.loggedin) {
-    username = request.session.username;
-    balance = request.session.balance;
+    const username = request.session.username;
+    const balance = request.session.balance;
     response.render("home_page", { username, balance });
   } else {
     response.redirect("/");
@@ -98,6 +98,7 @@ app.post("/transfer", function (request, response) {
     var account_to = parseInt(request.body.account_to);
     var amount = parseInt(request.body.amount);
     var account_from = request.session.account_no;
+    let sent;
     if (account_to && amount) {
       if (balance > amount) {
         try {
@@ -107,19 +108,19 @@ app.post("/transfer", function (request, response) {
           db.prepare(
             `UPDATE users SET balance = balance - ${amount} WHERE account_no = ${account_from}`
           ).run();
-          var sent = "Money Transfered";
+          sent = "Money Transfered";
           response.render("transfer", { sent });
         } catch (error) {
           console.log(error);
-          var sent = "Transfer failed.";
+          sent = "Transfer failed.";
           response.render("transfer", { sent });
         }
       } else {
-        var sent = "You Don't Have Enough Funds.";
+        sent = "You Don't Have Enough Funds.";
         response.render("transfer", { sent });
       }
     } else {
-      var sent = "";
+      sent = "";
       response.render("transfer", { sent });
     }
   } else {
@@ -130,7 +131,7 @@ app.post("/transfer", function (request, response) {
 //PATH TRAVERSAL CODE
 app.get("/download", function (request, response) {
   if (request.session.loggedin) {
-    file_name = request.session.file_history;
+    const file_name = request.session.file_history;
     response.render("download", { file_name });
   } else {
     response.redirect("/");
@@ -154,7 +155,7 @@ app.post("/download", function (request, response) {
       if (!fileName.includes(rootDir)) {
         response.end("File not found");
       } else {
-        content = fs.readFileSync(fileName, "utf8");
+        const content = fs.readFileSync(fileName, "utf8");
         response.end(content);
       }
     } catch (err) {

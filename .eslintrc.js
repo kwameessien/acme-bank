@@ -1,13 +1,23 @@
+/* eslint-env node */
 module.exports = {
   env: {
     browser: true,
-    commonjs: true,
     es2021: true,
+    node: true,
   },
-  parserOptions: {
-    ecmaVersion: 12,
-  },
-  rules: {
-    strict: ["global"],
-  },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+    }
 };

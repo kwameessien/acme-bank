@@ -85,8 +85,8 @@ app.post("/auth", function (request, response) {
 //Home Menu No Exploits Here.
 app.get("/home", function (request, response) {
   if (request.session.loggedin) {
-    username = request.session.username;
-    balance = request.session.balance;
+    const username = request.session.username;
+    const balance = request.session.balance;
     response.render("home_page", { username, balance });
   } else {
     response.redirect("/");
@@ -115,14 +115,14 @@ app.post("/transfer", csrfMiddleware, function (request, response) {
       if (balance > amount) {
         db.get(
           `UPDATE users SET balance = balance + ${amount} WHERE account_no = ${account_to}`,
-          function (error, results) {
-            console.log(error);
-            console.log(results);
+          function (err, res) {
+            console.log(err);
+            console.log(res);
           }
         );
         db.get(
           `UPDATE users SET balance = balance - ${amount} WHERE account_no = ${account_from}`,
-          function (error, results) {
+          function () {
             var sent = "Money Transfered";
             response.render("transfers", {
               sent,
@@ -145,7 +145,7 @@ app.post("/transfer", csrfMiddleware, function (request, response) {
 //PATH TRAVERSAL CODE FIXED
 app.get("/download", function (request, response) {
   if (request.session.loggedin) {
-    file_name = request.session.file_history;
+    const file_name = request.session.file_history;
     response.render("download", { file_name });
   } else {
     response.redirect("/");
@@ -170,7 +170,7 @@ app.post("/download", function (request, response) {
       if (filename.indexOf(rootDir) < 0) {
         response.end("File not found");
       } else {
-        content = fs.readFileSync(filePath, "utf8");
+        const content = fs.readFileSync(filePath, "utf8");
         response.end(content);
       }
     } catch (err) {
@@ -204,7 +204,7 @@ app.post("/public_forum", function (request, response) {
       db.all(
         `INSERT INTO public_forum (username,message) VALUES (?,?)`,
         [username, comment],
-        (err, rows) => {
+        (err) => {
           console.log(err);
         }
       );
@@ -262,4 +262,4 @@ app.get("/public_ledger", function (request, response) {
   //response.end();
 });
 
-app.listen(3000);
+app.listen(PORT);
