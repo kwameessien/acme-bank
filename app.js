@@ -217,15 +217,23 @@ app.post(
 //SQL UNION INJECTION
 app.get("/public_ledger", function (request, response) {
   if (request.session.loggedin) {
-    var id = request.query.id;
+    const id = parseInt(request.query.id, 10);
+    const amount = parseInt(request.query.amount, 10);
     let rows;
-    if (id) {
+    if (!isNaN(id) && !isNaN(amount)) {
       rows = db
-        .prepare(`SELECT * FROM public_ledger WHERE from_account = '${id}'`)
-        .all();
+        .prepare(
+          "SELECT * FROM public_ledger WHERE from_account = ? AND amount = ?"
+        )
+        .all(id, amount);
+      console.log("PROCESSING INPUT");
+    } else if (!isNaN(id)) {
+      rows = db
+        .prepare("SELECT * FROM public_ledger WHERE from_account = ?")
+        .all(id);
       console.log("PROCESSING INPUT");
     } else {
-      rows = db.prepare(`SELECT * FROM public_ledger`).all();
+      rows = db.prepare("SELECT * FROM public_ledger").all();
     }
     response.render("ledger", { rows: rows || [] });
   } else {
