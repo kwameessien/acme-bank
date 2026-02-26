@@ -172,26 +172,47 @@ app.get("/public_forum", function (request, response) {
   }
 });
 
-app.post("/public_forum", function (request, response) {
-  if (request.session.loggedin) {
-    var comment = request.body.comment;
-    var username = request.session.username;
-    if (comment) {
-      try {
-        db.prepare(
-          `INSERT INTO public_forum (username,message) VALUES ('${username}','${comment}')`
-        ).run();
-      } catch (err) {
-        console.log(err);
+app.post(
+  "/public_forum",
+  [
+    body("comment")
+      .trim()
+      .optional({ checkFalsy: true })
+      .isLength({ max: 500 })
+      .withMessage("Comment must be 500 characters or less")
+      .escape(),
+  ],
+  function (request, response) {
+    if (request.session.loggedin) {
+      const errors = validationResult(request);
+      if (!errors.isEmpty()) {
+        const rows = db
+          .prepare(`SELECT username,message FROM public_forum`)
+          .all();
+        return response.render("forum", {
+          rows,
+          errors: errors.array(),
+        });
       }
+      var comment = request.body.comment;
+      var username = request.session.username;
+      if (comment) {
+        try {
+          db.prepare(
+            `INSERT INTO public_forum (username,message) VALUES ('${username}','${comment}')`
+          ).run();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      const rows = db.prepare(`SELECT username,message FROM public_forum`).all();
+      console.log(rows);
+      response.render("forum", { rows });
+    } else {
+      response.redirect("/");
     }
-    const rows = db.prepare(`SELECT username,message FROM public_forum`).all();
-    console.log(rows);
-    response.render("forum", { rows });
-  } else {
-    response.redirect("/");
   }
-});
+);
 
 //SQL UNION INJECTION
 app.get("/public_ledger", function (request, response) {

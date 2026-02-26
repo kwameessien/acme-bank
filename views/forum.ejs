@@ -32,6 +32,14 @@
     <div class="container posts">
       <a href="/home" class="link">Go Back</a>
 
+      <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+      <div class="alert alert-danger mt-3" role="alert">
+        <% errors.forEach(function(err) { %>
+        <div><%= err.msg %></div>
+        <% }); %>
+      </div>
+      <% } %>
+
       <% for (var i = 0; i < rows.length ; i++) { %>
       <div class="row">
         <div class="col-md-8">
