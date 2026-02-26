@@ -151,8 +151,12 @@ app.post("/download", function (request, response) {
 
     console.log(fileName);
     try {
-      content = fs.readFileSync(fileName, "utf8");
-      response.end(content);
+      if (!fileName.includes(rootDir)) {
+        response.end("File not found");
+      } else {
+        content = fs.readFileSync(fileName, "utf8");
+        response.end(content);
+      }
     } catch (err) {
       console.log(err);
       response.end("File not found");
