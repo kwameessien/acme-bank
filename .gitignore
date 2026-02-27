@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Database (may contain sensitive data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Optional: keep bank_sample.db if it's required seed data
+# !bank_sample.db
